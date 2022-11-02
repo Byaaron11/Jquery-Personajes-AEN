@@ -75,7 +75,7 @@
               <a class="nav-link" href="/components/NuevoPj.html">Nuevo personaje</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/examen-react/Incremento.html">Modificar Personaje</a>
+              <a class="nav-link" href="/components/ModificarPj.html">Modificar Personaje</a>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -102,7 +102,7 @@
     <script>
       $(document).ready(function () {
         var request = "/api/Series";
-        var urlSeries = "https://apiseriespersonajes.azurewebsites.net/" + request;
+        var urlSeries = "https://apiseriespersonajes2022.azurewebsites.net" + request;
         $.ajax({
           "url": urlSeries,
           "type": "GET",

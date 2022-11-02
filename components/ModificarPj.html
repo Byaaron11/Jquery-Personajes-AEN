@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="menu-container"></div>
+    <div class="container-fluid">
+      <h1 class="display-4 text-center">Personajes y series</h1>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3">
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label"
+              >Seleccione una serie:</label>
+            <select class="form-select" id="selectserie" aria-label="Default select example">
+              <!-- <option selected>Open this select menu</option>
+                                  <option value="1">One</option>
+                                  <option value="2">Two</option>
+                                  <option value="3">Three</option> -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label"
+              >Seleccione un personaje:</label>
+            <select class="form-select" id="selectpersonaje" aria-label="Default select example">
+              <!-- <option selected>Open this select menu</option>
+                                  <option value="1">One</option>
+                                  <option value="2">Two</option>
+                                  <option value="3">Three</option> -->
+            </select>
+          </div>
+          <button type="button" class="btn btn-info" onclick=hacerPost()>
+            Guardar cambios
+          </button>
+          <div id="serieselected"></div>
+          <div id="personajeselected"></div>
+        </div>
+        <div class="col"></div>
+      </div>
+      
+    </div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        var urlSeries = "https://apiseriespersonajes2022.azurewebsites.net";
+      $(document).ready(function () {
+        $("#menu-container").load("/../Menu.html");
+        //Pues como antes necesito mostrar en el select tanto las series como los personajes de toda la Api
+        //Primero con las series
+        var requestSerie = "/api/Series";
+        $.ajax({
+          url: urlSeries + requestSerie,
+          type: "GET",
+          success: function (data) {
+            $.each(data, function (index, serie) {
+              var option = $("<option>", {
+                "value":serie.idSerie,
+                "text":serie.nombre
+              });
+              $("#selectserie").append(option);
+            });
+          },
+        });
+        //Y ahora con los personajes
+        var requestPj = "/api/Personajes";
+        $.ajax({
+            "url": urlSeries + requestPj,
+            "type":"GET",
+            "success": function(data){
+                $.each(data, function (index, personaje) {
+                var option = $("<option>", {
+                    "value":personaje.idPersonaje,
+                    "text":personaje.nombre
+              });
+              $("#selectpersonaje").append(option);
+            });
+            }
+        })
+      });
+      function hacerPost() {
+        var selectSerie = parseInt(document.getElementById("selectserie").value);
+        var selectPersonaje = parseInt(document.getElementById("selectpersonaje").value);
+        var requestPut = "/api/Personajes/"+selectPersonaje+"/"+selectSerie;
+        $.ajax({
+            "url":urlSeries + requestPut,
+            "type":"PUT",
+            "contentType":"application/json",
+            "success":function(data){
+                resultadoSerie();
+                resultadoPersonaje();
+            }
+        });
+      }
+
+      function resultadoSerie(){
+        var selectSerie = parseInt(document.getElementById("selectserie").value);
+        var request = "/api/series/"+selectSerie;
+        $.ajax({
+            "url":urlSeries + request,
+            "type":"GET",
+            "success":function(data){
+                $("#serieselected").append("<h3 style='color:red'>"+data.nombre+"</h3>");
+                $("#serieselected").append("<img src='"+data.imagen+"' width= '250'/>");
+
+            }
+        })
+      }
+      function resultadoPersonaje(){
+        var selectPersonaje = parseInt(document.getElementById("selectpersonaje").value);
+        var request = "/api/personajes/"+selectPersonaje;
+        $.ajax({
+            "url":urlSeries + request,
+            "type":"GET",
+            "success":function(data){
+                $("#personajeselected").append("<h3 style='color:red'>"+data.nombre+"</h3>");
+                $("#personajeselected").append("<img src='"+data.imagen+"' width= '250'/>");
+
+            }
+        })
+      }
+    </script>
+  </body>
+</html>

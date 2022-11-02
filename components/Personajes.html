@@ -34,7 +34,7 @@
             var name = parametro.get("name");
             $("#titulo").text("Personajes de "+name);
             var request = "/api/Series/PersonajesSerie/"+ idSerie;
-            var url = "https://apiseriespersonajes.azurewebsites.net" + request;
+            var url = "https://apiseriespersonajes2022.azurewebsites.net" + request;
             $.ajax({
                 "url": url,
                 "method":"GET",

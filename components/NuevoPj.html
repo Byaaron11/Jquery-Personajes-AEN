@@ -60,7 +60,7 @@
         $("#menu-container").load("/../Menu.html");
         //Primero vamos a obtener las series e insertarlas en el select
         var request = "/api/Series";
-        var urlSeries = "https://apiseriespersonajes.azurewebsites.net/" + request;
+        var urlSeries = "https://apiseriespersonajes2022.azurewebsites.net" + request;
         $.ajax({
           url: urlSeries,
           type: "GET",
@@ -90,7 +90,7 @@
             //A continuacion lo traducimos a JSON:
             var dataJson = JSON.stringify(personaje);
             var requestPost = "/api/Personajes";
-            var urlPost = "https://apiseriespersonajes.azurewebsites.net"+ requestPost;
+            var urlPost = "https://apiseriespersonajes2022.azurewebsites.net"+ requestPost;
             $.ajax({
                 "url":urlPost,
                 "method":"POST",
