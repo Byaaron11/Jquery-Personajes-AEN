@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div id="menu"></div>
+    <div class="container-fluid text-center">
+        <h1 class="display-4"></h1>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-3 mt-5"><div id="card"></div></div>
+            <div class="col"></div>
+        </div>
+    </div>
+    <script src="/js/jquery-3.6.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#menu").load("../Menu.html");
+            //Teniendo el componente con el menu en funcionamiento ahora pasaré a recoger los parametros
+            //Los cuales tengo que mandar primero desde el Menú.html
+            const parametro = new URLSearchParams(window.location.search);
+            var idSerie = parametro.get("idSerie");
+            //Ya tengo el parámetro, ahora voy a hacer la petición
+            var request = "/api/Series/"+ idSerie;
+            var url = "https://apiseriespersonajes.azurewebsites.net" + request;
+            $.ajax({
+                "url": url,
+                "type":"GET",
+                "success": function(data){
+                    //Ahora queda pintar un Card. Dado que necesito FUNCIONALIDAD 
+                    //tengo que hacerlo mediante append
+                    document.title = data.nombre;
+                    var card = $("<div>" , {"class":"card", "style":"width:18rem"});
+                    var img = $("<img>" , {"class":"card-img-top", "alt":"...", "src":data.imagen});
+                    img.appendTo(card);
+                    var bodyCard = $("<div>" , "class:card-body");
+                    bodyCard.appendTo(card);
+                    var titleCard = $("<h5>", {"class":"card-title", "text":data.nombre});
+                    var puntuacion = $("<p>", {"class":"card-text", "text":"Puntuación: "+data.puntuacion});
+                    var botonPj  = $("<a>" , {"href":"/components/Personajes.html?idSerie="+data.idSerie+"&name="+data.nombre, "class":"btn btn-success", "text":"Personajes"});
+                    titleCard.appendTo(bodyCard);
+                    puntuacion.appendTo(bodyCard);
+                    botonPj.appendTo(bodyCard);
+                    card.appendTo($("#card"));
+                }
+            })
+            
+            
+        });
+    </script>
+</body>
+</html>
+
+<!--  -->

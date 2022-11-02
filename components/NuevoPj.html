@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="menu-container"></div>
+    <h1 class="display-4 text-center" style="color: blue">Nuevo Personaje</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col">
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cajanombre"
+              placeholder="Nuevo nombre"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label"
+              >Imagen</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="cajaimagen"
+              placeholder="ej: https://..."
+            />
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label"
+              >Serie:</label
+            >
+            <select class="form-select" id="cajaselect" aria-label="Default select example">
+              <!-- <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option> -->
+            </select>
+          </div>
+          <button type="button" id="insertarPj" class="btn btn-outline-success">
+            <!-- Al pulsar se debe de ejecutar la accion y enviarte a Personajes.html -->
+            Insertar Personaje
+          </button>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#menu-container").load("/../Menu.html");
+        //Primero vamos a obtener las series e insertarlas en el select
+        var request = "/api/Series";
+        var urlSeries = "https://apiseriespersonajes.azurewebsites.net/" + request;
+        $.ajax({
+          url: urlSeries,
+          type: "GET",
+          success: function (data) {
+            $.each(data, function (index, serie) {
+              var option = $("<option>", {
+                "value":serie.idSerie,
+                "text":serie.nombre
+              });
+              $("#cajaselect").append(option);
+            });
+          },
+        });
+        //Ahora queda guardar los nuevos datos al pulsar sobre el botón
+        $("#insertarPj").click(function(){
+            var idPersonaje = 0; // De este no hace falta porque se genera solo
+            var nombre = $("#cajanombre").val();
+            var imagen = $("#cajaimagen").val();
+            var select = parseInt($("#cajaselect").val()); //Si no parseo me sale bad request 
+            console.log(select)
+            //Ahora meto las variables en un objeto que luego tengo que traducir al JSON
+            var personaje = new Object();
+            personaje.idPersonaje = idPersonaje;
+            personaje.nombre = nombre;
+            personaje.imagen = imagen;
+            personaje.idSerie = select;
+            //A continuacion lo traducimos a JSON:
+            var dataJson = JSON.stringify(personaje);
+            var requestPost = "/api/Personajes";
+            var urlPost = "https://apiseriespersonajes.azurewebsites.net"+ requestPost;
+            $.ajax({
+                "url":urlPost,
+                "method":"POST",
+                data: dataJson,
+                contentType: "application/json",
+                "success": function(data){
+                    window.location.href = "Personajes.html?idSerie="+personaje.idSerie;
+                }
+            })
+            
+        });
+
+
+      });
+    </script>
+  </body>
+</html>

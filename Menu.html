@@ -43,11 +43,12 @@
   </head>
   <body>
     <nav
-      class="navbar navbar-expand-xxl navbar-dark bg-dark"
+      class="navbar navbar-expand-xxl navbar-dark bg-secondary"
       aria-label="Seventh navbar example"
     >
       <div class="container-fluid">
-        <a class="navbar-brand" href="/index.html">JQuery CRUD's</a>
+        <img src="/images/logo.png" width="100"/>
+        <!-- <a class="navbar-brand" href="/index.html">JQuery CRUD's</a> -->
         <button
           class="navbar-toggler"
           type="button"
@@ -66,15 +67,15 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="/Hospitales/Hospitales.html"
-                >Hospitales</a
+                href="/index.html"
+                >Home</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/Champions/Apuestas.html">Apuestas</a>
+              <a class="nav-link" href="/components/NuevoPj.html">Nuevo personaje</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/examen-react/Incremento.html">Examen react</a>
+              <a class="nav-link" href="/examen-react/Incremento.html">Modificar Personaje</a>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -82,9 +83,9 @@
                 href="#"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                >Equipos Champions</a
+                >Series</a
               >
-              <ul class="dropdown-menu" id="dropdown-equipos">
+              <ul class="dropdown-menu" id="dropdown-series">
                 <!-- <li><a class="dropdown-item" href="#">Action</a></li>
                   <li><a class="dropdown-item" href="#">Another action</a></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li> -->
@@ -94,25 +95,27 @@
         </div>
       </div>
     </nav>
+
+    
     <!-- <script src="/js/bootstrap.bundle.min.js"></script> -->
     <script src="/js/jquery-3.6.1.min.js"></script>
     <script>
       $(document).ready(function () {
-        var request = "/api/equipos";
-        var urlChampions = "https://apichampions.azurewebsites.net" + request;
+        var request = "/api/Series";
+        var urlSeries = "https://apiseriespersonajes.azurewebsites.net/" + request;
         $.ajax({
-          "url": urlChampions,
+          "url": urlSeries,
           "type": "GET",
           success: function (data) {
-            $.each(data, function (index, equipo) {
+            $.each(data, function (index, serie) {
               var li = $("<li>");
               var enlace = $("<a>", {
-                href: "/Champions/Equipo.html?idEquipo=" + equipo.idEquipo,
+                href: "/components/Serie.html?idSerie=" + serie.idSerie,
                 class: "dropdown-item",
-                text: equipo.nombre,
+                text: serie.nombre,
               });
               enlace.appendTo(li);
-              li.appendTo($("#dropdown-equipos"));
+              li.appendTo($("#dropdown-series"));
             });
           },
         });

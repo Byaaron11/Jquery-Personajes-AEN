@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Para optimizar tiempo con tu permiso voy a copiar y pegar mi template que ya creé para este componente :) -->
+    <div id="menu-container"></div>
+    <!-- Aqui voy a poner el boton para que vuelva atras -->
+    
+    <div class="container-fluid text-center">
+        <h1 class="display-4" id="titulo">Titulo del componente</h1>
+        <button id="volverAtras" class="btn btn-danger">
+            Volver
+        </button>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-6"><div id="tablapersonajes"></div></div>
+            <div class="col"></div>
+        </div>
+    </div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            //Llamo al menú y recojo el/los parametros de la url
+            $("#menu-container").load('/../Menu.html');
+            const parametro = new URLSearchParams(window.location.search);
+            var idSerie = parametro.get("idSerie");
+            var name = parametro.get("name");
+            $("#titulo").text("Personajes de "+name);
+            var request = "/api/Series/PersonajesSerie/"+ idSerie;
+            var url = "https://apiseriespersonajes.azurewebsites.net" + request;
+            $.ajax({
+                "url": url,
+                "method":"GET",
+                "success": function(data){
+                    //Lo mismo que antes, muestro el dibujo, y como SOLO voy a dibujar utilizaré el html()
+                    //para plasmar la tabla
+                    var html = "<table class='table table-dark'>";
+                    html += "<thead>";
+                    html += "<tr>";
+                    html += "<th>Personaje</th>";
+                    html += "<th>Imagen</th>";
+                    html += "</tr>";
+                    html += "</thead>";
+                    html += "<tbody>";
+                    //A continuacion voy a utilizar each(), 
+                    //¿por que? -> porque voy a mostrar mas de 1 elemento (objeto) de la petición que acabo de hacer
+                    $.each(data, function(index, personaje){
+                        html += "<tr>";
+                        html += "<td>"+personaje.nombre+"</td>";
+                        html += "<td><img src='"+personaje.imagen+"' width='200'/></td>";
+                        html += "</tr>";
+                    });
+                    //Por ahora no voy a poner el cierre del tbody... nose pq se me tramboliquea
+                    //Bueno solo queda impolementar el dibujo en el html
+                    $("#tablapersonajes").html(html);
+                }
+            });
+            $("#volverAtras").click(function(){
+                window.location.href = "Serie.html?idSerie="+idSerie;
+            })
+        });
+    </script>
+</body>
+</html>
