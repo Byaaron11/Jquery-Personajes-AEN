@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="menu-container"></div>
+    <h1 class="display-4">Tabla de hospitales</h1>
+    <div id="loading"></div>
+    <div id="tabla-hospitales"></div>
+    <div id="boton-crear"></div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#menu-container").load('/../Menu.html');
+            var url = "https://apicrudhospital.azurewebsites.net";
+            var request = "/webresources/hospitales";
+            var statusHosp = false;
+            $.ajax({
+                "url": url + request,
+                "method":"GET",
+                "success": function(data){
+                    statusHosp = true
+                    var tabla = $("<table>",{"class":"table table-dark table-striped-columns"});
+                    var cab = $("<thead>");
+                    var filaCab = $("<tr>");
+                    var celdaCab1 = $("<th>Id</th>");
+                    var celdaCab2 = $("<th>Nombre</th>");
+                    var celdaCab3 = $("<th>Dirección</th>");
+                    var celdaCab4 = $("<th>Teléfono</th>");
+                    var celdaCab5 = $("<th>Nº de camas</th>");
+                    var celdaCab6 = $("<th>Acciones</th>");     
+                    var bod = $("<tbody>");               
+                    celdaCab1.appendTo(filaCab);
+                    celdaCab2.appendTo(filaCab);
+                    celdaCab3.appendTo(filaCab);
+                    celdaCab4.appendTo(filaCab);
+                    celdaCab5.appendTo(filaCab);
+                    celdaCab6.appendTo(filaCab);
+                    filaCab.appendTo(cab);
+                    cab.appendTo(tabla);
+                    bod.appendTo(tabla);
+                    $.each(data, function(index, hosp){
+                        var fila = $("<tr>");
+                        var celda1 = $("<td>"+hosp.idhospital+"</td>");
+                        var celda2 = $("<td>"+hosp.nombre+"</td>");
+                        var celda3 = $("<td>"+hosp.direccion+"</td>");
+                        var celda4 = $("<td>"+hosp.telefono+"</td>");
+                        var celda5 = $("<td>"+hosp.camas+"</td>");
+                        fila.appendTo(bod);
+                        celda1.appendTo(fila);
+                        celda2.appendTo(fila);
+                        celda3.appendTo(fila);
+                        celda4.appendTo(fila);
+                        celda5.appendTo(fila);
+                        var celda6 = $("<td>");
+                        celda6.appendTo(fila);
+                        var botonModificar = $("<button>",{"data-id":hosp.idhospital, "text":"Modificar", "class":"btn btn-outline-light"});
+                        var botonEliminar= $("<button>",{"data-id":hosp.idhospital, "text":"Eliminar", "class":"btn btn-outline-danger"});
+                        botonModificar.appendTo(celda6); 
+                        botonEliminar.appendTo(celda6);
+                        
+
+/* ---------- ATENTO, AQUI ES DONDE ENVIO PARÁMETROS A TRAVES DE URL como si fuese react pulsando botones -----------------*/
+                        
+                        botonModificar.click(function(){
+                            var id = $(this).data("id");
+                            window.location.href = "ModificarHospital.html?idhosp="+id;
+                        });
+                        botonEliminar.click(function(){
+                            var id = $(this).data("id");
+                            window.location.href = "EliminarHospital.html?idhosp="+id;
+                        });
+                    });
+                    tabla.appendTo($("#tabla-hospitales"));
+                }
+            });
+            var botonCrear = $("<button>",{"text":"Crear Hospital", "id":"CreateHospital", "class":"btn btn-outline-success"});
+            botonCrear.appendTo($("#boton-crear"));
+            botonCrear.click(function(){
+                window.location.href = 'CrearHospital.html';
+            })
+        });
+    </script>
+</body>
+</html>

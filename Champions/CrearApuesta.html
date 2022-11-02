@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: grey;
+        color: white;
+      }
+      h1 {
+        text-align: center;
+      }
+      .col {
+        width: 300px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu-container"></div>
+    <h1 class="display-4">Nueva Apuesta</h1>
+    <div class="container">
+        <div class="col">
+            <div class="mb-3">
+              <label for="formGroupExampleInput" class="form-label">Usuario</label>
+              <input type="text" class="form-control" id="cajauser" />
+            </div>
+            <div class="mb-3">
+              <label for="formGroupExampleInput2" class="form-label">Resultado</label>
+              <input type="text" class="form-control" id="cajaresultado" />
+            </div>
+            <div class="mb-3">
+              <label for="formGroupExampleInput2" class="form-label">Fecha</label>
+              <input type="text" class="form-control" id="cajafecha" />
+            </div>
+          </div>
+          <button class="btn btn-success" id="btn-crear">
+            Crear Apuesta
+          </button>
+          <button class="btn btn-danger" id="btn-volver">
+            Volver atrás
+          </button>
+    </div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#menu-container").load("/../Menu.html");
+
+        $("#btn-crear").click(function(){
+          var nuevoUser = $("#cajauser").val();
+          var nuevoResultado = $("#cajaresultado").val();
+          var nuevaFecha = $("#cajafecha").val();
+          //Creo el objeto modificado
+          var nuevaApuesta = new Object();
+          nuevaApuesta.idApuesta = 0;
+          nuevaApuesta.usuario = nuevoUser;
+          nuevaApuesta.resultado = nuevoResultado;
+          nuevaApuesta.fecha = nuevaFecha;
+          //Y lo traduzco a Json
+          var dataJson = JSON.stringify(nuevaApuesta);
+          var request = "/api/apuestas";
+          var url = "https://apichampions.azurewebsites.net" + request;
+          $.ajax({
+            url: url,
+            type: "POST",
+            data: dataJson,
+            contentType: "application/json",
+            success: function (data) {
+              window.location.href = "Apuestas.html";
+            },
+          });
+        });
+
+        $("#btn-volver").click(function(){
+            window.location.href = "Apuestas.html";
+        });
+      });
+    </script>
+  </body>
+</html>

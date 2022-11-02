@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="menu-container"></div>
+    <h1 class="display-4" id="titulo-equipo"></h1>
+    <div id="boton-volver"></div>
+    <div id="tabla-jugadores"></div>
+
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#menu-container").load('/../Menu.html');
+            const parametro = new URLSearchParams(window.location.search);
+            var id = parametro.get("idEquipo");
+            //utilizo el decodeUriComponent para los parametros que contengan espacios en blanco
+            var name = decodeURIComponent(parametro.get("nameTeam"));
+            document.title = "Jugadores del "+name;
+            $("#titulo-equipo").html("<h1 class='display-4'>Jugadores del "+name+"</h1>")
+            var request = "/api/jugadores/jugadoresequipo/"+id;
+            var url = "https://apichampions.azurewebsites.net"+request;
+            $.ajax({
+                "url": url,
+                "method":"GET",
+                "success": function(data){
+                    var tabla = $("<table>",{"class":"table table-success table-striped"});
+                    var cab = $("<thead>");
+                    var filaCab = $("<tr>");
+                    var celdaCab1 = $("<th>Nombre</th>");
+                    var celdaCab2 = $("<th>Imagen</th>");
+                    var celdaCab3 = $("<th>Posición</th>");
+                    var celdaCab4 = $("<th>Acción</th>");   
+                    var bod = $("<tbody>");               
+                    celdaCab1.appendTo(filaCab);
+                    celdaCab2.appendTo(filaCab);
+                    celdaCab3.appendTo(filaCab);
+                    celdaCab4.appendTo(filaCab);
+                    filaCab.appendTo(cab);
+                    cab.appendTo(tabla);
+                    bod.appendTo(tabla);
+                    $.each(data, function(index, jugador){
+                        var fila = $("<tr>");
+                        var celda1 = $("<td>"+jugador.nombre+"</td>");
+                        var celda2 = $("<td>");
+                        var image = $("<img>",{"src":jugador.imagen, "class":"rounded"});
+                        image.appendTo(celda2);
+                        var celda3 = $("<td>"+jugador.posicion+"</td>");
+                        var celda4 = $("<td>");                        
+                        var botonDetalle = $("<button>",{"data-id":jugador.idJugador, "text":"Detalles", "class":"btn btn-outline-primary"});
+                        fila.appendTo(bod);
+                        celda1.appendTo(fila);
+                        celda2.appendTo(fila);
+                        celda3.appendTo(fila);
+                        celda4.appendTo(fila);
+                        botonDetalle.appendTo(celda4);
+                        botonDetalle.click(function(){
+                            window.location.href = "Jugador.html?idJugador="+jugador.idJugador+"&idEquipo="+jugador.idEquipo;                            
+                        }); 
+                    });
+                    tabla.appendTo($("#tabla-jugadores"));
+                }
+            });
+            var botonVolver = $("<button>", {
+                "text":"Volver",
+                "class":"btn btn-secondary"
+            });
+            botonVolver.appendTo($("#boton-volver"));
+            botonVolver.click(function(){
+                window.location.href= "Equipo.html?idEquipo="+id;
+            })
+            
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: grey;
+        color: white;
+      }
+      h1 {
+        text-align: center;
+      }
+      .col {
+        width: 300px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu-container"></div>
+    <h1 class="display-4">Crear Nuevo hospital</h1>
+    <div class="col">
+      <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label"
+          >Id Hospital</label
+        >
+        <input type="text" class="form-control" id="cajaid" />
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="cajanombre" />
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Dirección</label>
+        <input type="text" class="form-control" id="cajadireccion" />
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Teléfono</label>
+        <input type="text" class="form-control" id="cajatelefono" />
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label"
+          >Nº de camas</label
+        >
+        <input type="text" class="form-control" id="cajacamas" />
+      </div>
+    </div>
+    <button class="btn btn-success" id="btn-crear">
+      Crear hospital
+    </button>
+    <button class="btn btn-danger" id="btn-volver">
+      Volver atrás
+    </button>
+    <div id="cambiado"></div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#menu-container").load("/../Menu.html");
+        function volverAtras() {
+          window.location.href = "Hospitales.html";
+        }
+
+        $("#btn-crear").click(function(){
+          var nuevaId = parseInt($("#cajaid").val());
+          var nuevoNombre = $("#cajanombre").val();
+          var nuevaDire = $("#cajadireccion").val();
+          var nuevoTel = $("#cajatelefono").val();
+          var nuevasCamas = parseInt($("#cajacamas").val());
+          //Creo el objeto modificado
+          var nuevoHospital = new Object();
+          nuevoHospital.idhospital = nuevaId;
+          nuevoHospital.nombre = nuevoNombre;
+          nuevoHospital.direccion = nuevaDire;
+          nuevoHospital.telefono = nuevoTel;
+          nuevoHospital.camas = nuevasCamas;
+          //Y lo traduzco a Json
+          var dataJson = JSON.stringify(nuevoHospital);
+          var request = "/webresources/hospitales/post";
+          var url = "https://apicrudhospital.azurewebsites.net" + request;
+          $.ajax({
+            url: url,
+            type: "POST",
+            data: dataJson,
+            contentType: "application/json",
+            success: function (data) {
+              $("#cambiado").html("<h2 style='color:lightgreen'>Hospital "+nuevoNombre+" fue añadido correctamente!!</h2>")
+            },
+          });
+        });
+
+        $("#btn-volver").click(function(){
+            window.location.href = "Hospitales.html";
+        });
+      });
+    </script>
+  </body>
+</html>

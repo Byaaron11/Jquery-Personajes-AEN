@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: black;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu-container"></div>
+    <div class="container text-center">
+      <h1 class="display-4">Incremento Salarial</h1>
+      <!-- _____________ LA FILA DEL SELECT____________________ -->
+      <div class="row align-items-start">
+        <div class="col"></div>
+        <div class="col">
+          <label class="form-label">Seleccionar una especialidad:</label>
+          <select class="form-select" id="seleccion"></select>
+        </div>
+        <div class="col"></div>
+      </div>
+      <hr />
+      <!-- _____________ FILA DEL INPUT (incremento) ____________ -->
+      <div class="row align-items-start">
+        <div class="col"></div>
+        <div class="col">
+          <label class="form-label">Nuevo incremento</label>
+          <input type="text" class="form-control" id="input" value="0" />
+        </div>
+        <div class="col"></div>
+      </div>
+<!-- __________________ Botón ___________________________________ -->
+      <hr />
+      <button type="button" class="btn btn-outline-light" id="boton">Hacer incremento</button>
+    </div>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#menu-container").load("/../Menu.html");
+        var request ="/api/doctores/especialidades";
+            var url = "https://apicruddoctores.azurewebsites.net" + request;
+            $.get(url, function(data){
+                $.each(data, function(key, value) {
+                    var option = $("<option>",{"value":value, "text":value});
+                    option.appendTo($("#seleccion"));
+                });
+            });
+            $("#boton").on("click", function(){
+                var especialidad = $("#seleccion").val();
+                var incremento = parseInt($("#input").val());
+                window.location.href = 
+                'Doctores.html?esp='
+                +especialidad+'&inc='+incremento;
+            })
+      });
+    </script>
+  </body>
+</html>
